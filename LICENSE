@@ -19,10 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-The weapon figures in src/squad_arty_calc/weapons.py come from SquadCalc
-(https://github.com/sh4rkman/SquadCalc) and remain under SquadCalc's own
-license terms, which limit them to non-commercial use. See the Credit section
-of README.md.

@@ -85,4 +85,4 @@ python -m pytest
 
 Grid layout, formulas and weapon figures were checked against [SquadCalc](https://github.com/sh4rkman/SquadCalc), an
 open-source community mortar calculator for Squad. This project is independent and not affiliated with it. The weapon
-figures in `weapons.py` come from SquadCalc's data and stay under its license terms; see [LICENSE](LICENSE).
+figures in `weapons.py` come from SquadCalc's data and stay under its license terms; see [NOTICE](NOTICE). The code is MIT licensed.
