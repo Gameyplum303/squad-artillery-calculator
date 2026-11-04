@@ -1,6 +1,6 @@
 """Distance, bearing, elevation angle, and travel-time calculations.
 
-See README.md "The math you'll implement" before starting.
+See README.md "How the math works" for an overview.
 
 Formulas here are cross-checked against SquadCalc's source
 (https://github.com/sh4rkman/SquadCalc — src/js/squadFiringSolution.js),
@@ -8,8 +8,7 @@ a widely-used community mortar calculator, and its wiki writeups:
   - distance/bearing: https://github.com/sh4rkman/SquadCalc/wiki/Deducing-distance-and-bearing
   - elevation angle:  https://github.com/sh4rkman/SquadCalc/wiki/Deducing-Elevation
   - time of flight:   https://github.com/sh4rkman/SquadCalc/wiki/Deducing-Time-Of-Flight
-Reading those pages alongside the TODOs below will help if the math
-in a docstring is hard to follow from words alone.
+Those pages walk through each formula in more detail.
 
 Altitude is NOT part of the grid coordinates in this project (real Squad
 derives it from a per-map heightmap image, which we don't have). Instead,
@@ -29,7 +28,7 @@ def distance(a: tuple[float, float], b: tuple[float, float]) -> float:
     separately by elevation_angle()/time_of_flight(), matching how
     Squad's own distance calc works (it never touches height).
 
-    TODO: implement (Pythagorean theorem: sqrt(dx**2 + dy**2)).
+    Squad maps are flat, so this is the Pythagorean theorem: sqrt(dx**2 + dy**2).
     """
     dx = b[0] - a[0]
     dy = b[1] - a[1]
@@ -40,14 +39,10 @@ def bearing(a: tuple[float, float], b: tuple[float, float]) -> float:
     """Compass bearing in degrees [0, 360) from point a to point b,
     where 0 = North, 90 = East, 180 = South, 270 = West.
 
-    TODO: implement.
-    - Use math.atan2 on the delta between the two points.
-    - atan2's convention (0 = East, counterclockwise) is NOT the same as
-      compass convention (0 = North, clockwise) — you'll need to convert.
-    - Remember y increases south in this project's coordinate convention
-      (see README) — make sure north really comes out as 0, not 180.
-    - Normalize the result into [0, 360) (atan2 can return negative
-      angles).
+    atan2's convention (0 = East, counterclockwise) differs from the
+    compass (0 = North, clockwise), and y increases south here, so the
+    deltas are swapped and dy negated before calling atan2. Negative
+    results are shifted into [0, 360).
     """
     dx = b[0] - a[0]
     dy = b[1] - a[1]
@@ -79,18 +74,17 @@ def elevation_angle(
     whether a target is "in range" now depends on distance AND height,
     not distance alone.
 
-    TODO: implement. This is the standard projectile-range equation
-    solved for launch angle, given initial speed v, gravity g, distance
-    d, and height difference h. There are generally two solutions — a
-    flatter "low angle" trajectory and a lobbing "high angle" one — pick
-    which one to solve for based on the low_angle argument:
+    This is the standard projectile-range equation solved for launch
+    angle, given initial speed v, gravity g, distance d and height
+    difference h. There are generally two solutions, a flatter "low
+    angle" trajectory and a lobbing "high angle" one, chosen by low_angle:
 
         g_eff = GRAVITY_MPS2 * weapon.gravity_scale
         v = weapon.velocity_mps
         h = height_diff_m - weapon.height_offset_m
 
         discriminant = v**4 - g_eff * (g_eff * distance_m**2 + 2 * h * v**2)
-        # if discriminant < 0: no real solution -> return None
+        # discriminant < 0 means no real trajectory: return None
 
         p1 = sqrt(discriminant)
         angle_term = -p1 if low_angle else p1
@@ -98,13 +92,10 @@ def elevation_angle(
         angle_rad = atan((v**2 + angle_term) / (g_eff * distance_m))
         angle_deg = degrees(angle_rad)
 
-        # if angle_deg is outside weapon.min_elevation_deg: return None
-        # otherwise return angle_deg
+        # an angle outside weapon.min_elevation_deg can't be fired: return None
 
-    Edge case worth handling deliberately: distance_m == 0 divides by
-    zero in that last step — decide what should happen (None makes
-    sense; nothing can be "fired" at zero range) and document your
-    choice.
+    A distance of zero (or less) returns None: nothing can be fired at
+    zero range, and the last step would divide by zero.
     """
     if distance_m <= 0:
         return None
@@ -138,7 +129,7 @@ def time_of_flight(
     """Seconds for the shell to reach a target height_diff_m above/below
     the firer, given it's fired at elevation_deg (from elevation_angle()).
 
-    TODO: implement. This solves the vertical motion equation for time:
+    This solves the vertical motion equation for time:
 
         g_eff = GRAVITY_MPS2 * weapon.gravity_scale
         v = weapon.velocity_mps
@@ -148,10 +139,9 @@ def time_of_flight(
              + sqrt(v**2 * sin(angle_rad)**2 - 2 * g_eff * height_diff_m)
              ) / g_eff
 
-    The sqrt's argument can go negative in extreme low-angle-plus-big-
-    height-difference cases (SquadCalc falls back to the flat-ground
-    version of the formula, dropping the height_diff_m term entirely,
-    when that happens — worth doing the same rather than crashing).
+    The sqrt's argument can go negative for extreme low-angle shots
+    with a big height difference. Like SquadCalc, this falls back to the
+    flat-ground formula (dropping height_diff_m) instead of failing.
     """
     g_eff = GRAVITY_MPS2 * weapon.gravity_scale
     v = weapon.velocity_mps
@@ -168,10 +158,6 @@ def in_range(weapon: Weapon, distance_m: float, height_diff_m: float = 0.0) -> b
     """Whether the target is reachable at all: distance_m is at least
     weapon.min_distance_m, AND at least one of the low/high angle
     solutions from elevation_angle() exists.
-
-    TODO: implement. This one's a few lines once elevation_angle() works
-    — no new math, just calling it (both low_angle=True and False) and
-    checking what comes back.
     """
     if distance_m < weapon.min_distance_m:
         return False

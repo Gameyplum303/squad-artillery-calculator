@@ -1,7 +1,6 @@
 """Weapon reference data.
 
-Unlike grid.py/ballistics.py, this file is data, not logic, so it's
-filled in rather than left as a stub.
+This file is data, not logic: the figures each weapon needs for a firing solution.
 
 Every entry here is pulled directly from SquadCalc's source
 (https://github.com/sh4rkman/SquadCalc, src/data/weapons.js and

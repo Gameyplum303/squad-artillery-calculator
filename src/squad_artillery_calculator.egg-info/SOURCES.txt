@@ -1,0 +1,17 @@
+LICENSE
+README.md
+pyproject.toml
+src/squad_artillery_calculator.egg-info/PKG-INFO
+src/squad_artillery_calculator.egg-info/SOURCES.txt
+src/squad_artillery_calculator.egg-info/dependency_links.txt
+src/squad_artillery_calculator.egg-info/entry_points.txt
+src/squad_artillery_calculator.egg-info/requires.txt
+src/squad_artillery_calculator.egg-info/top_level.txt
+src/squad_arty_calc/__init__.py
+src/squad_arty_calc/ballistics.py
+src/squad_arty_calc/cli.py
+src/squad_arty_calc/grid.py
+src/squad_arty_calc/gui.py
+src/squad_arty_calc/weapons.py
+tests/test_ballistics.py
+tests/test_grid.py

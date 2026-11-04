@@ -1,2 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "squad-artillery-calculator"
+version = "1.0.0"
+description = "Firing solutions for Squad mortars and artillery from grid references"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.scripts]
+squad-arty = "squad_arty_calc.cli:main"
+
+[project.gui-scripts]
+squad-arty-gui = "squad_arty_calc.gui:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
 [tool.pytest.ini_options]
 pythonpath = ["src"]
