@@ -1,5 +1,0 @@
-[console_scripts]
-squad-arty = squad_arty_calc.cli:main
-
-[gui_scripts]
-squad-arty-gui = squad_arty_calc.gui:main
